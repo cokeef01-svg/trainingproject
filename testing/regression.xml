@@ -1,0 +1,34 @@
+<!DOCTYPE suite SYSTEM "https://testng.org/testng-1.0.dtd">
+<suite name="Regression Suite" parallel="tests" thread-count="2">
+
+    <!-- Chrome -->
+    <test name="Chrome Regression">
+        <parameter name="browser" value="chrome"/>
+        <groups>
+            <run>
+                <include name="regression"/>
+            </run>
+        </groups>
+        <classes>
+            <class name="tests.LoginTest"/>
+            <class name="tests.EbayNavigationTest"/>
+            <class name="tests.DragDropTest"/>
+        </classes>
+    </test>
+
+    <!-- Edge -->
+    <test name="Edge Regression">
+        <parameter name="browser" value="edge"/>
+        <groups>
+            <run>
+                <include name="regression"/>
+            </run>
+        </groups>
+        <classes>
+            <class name="tests.LoginTest"/>
+            <class name="tests.EbayNavigationTest"/>
+            <class name="tests.DragDropTest"/>
+        </classes>
+    </test>
+
+</suite>
