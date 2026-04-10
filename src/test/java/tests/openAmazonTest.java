@@ -13,12 +13,12 @@ public class openAmazonTest extends BaseTest {
 	public void openAmazonTest() {
 		
 		//open amazon.com
-		driver.get("https://www.amazon.com/");
+		getDriver().get("https://www.amazon.com/");
 		
 		// get the title of the page
-		Assert.assertTrue(driver.getTitle().contains("Amazon"));
+		Assert.assertTrue(getDriver().getTitle().contains("Amazon"));
 		
-		driver.quit();
+		getDriver().quit();
 	}
 	
 
