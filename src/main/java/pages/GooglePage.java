@@ -13,7 +13,7 @@ public class GooglePage {
 	}
 	
 	// Locators
-	By searchBox = by.id("APjFqb");
+	By searchBox = By.id("APjFqb");
 	
 	//Actions
 	public void enterSearch(String text) {
