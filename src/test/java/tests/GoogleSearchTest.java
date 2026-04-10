@@ -15,11 +15,11 @@ public class GoogleSearchTest extends BaseTest {
 
    
 	   // goto google.com
-	   driver.get("https://www.google.com");
+		getDriver().get("https://www.google.com");
 	   
 	   // handle cookie popup if it appears
 	   try {
-		   driver.findElement(By.xpath("//button[.='Accept all']")).click();
+		   getDriver().findElement(By.xpath("//button[.='Accept all']")).click();
 	   } catch (Exception e) {
 		   System.out.println("No cookie popup displayed");
 	   }
@@ -27,13 +27,13 @@ public class GoogleSearchTest extends BaseTest {
 	   // find the search bar element and send keys 'Selenium Webdriver' (below is old code)
 	   //driver.findElement(By.id("APjFqb")).sendKeys("Selenium WebDriver");
 	   // New code using GooglePage to enter text in search box
-	   GooglePage google = new GooglePage(driver);
+	   GooglePage google = new GooglePage(getDriver());
 	   google.enterSearch("Selenium WebDriver");
 		
 	   // sleep for 2 seconds
 	    Thread.sleep(2000);
 
-	    driver.quit();
+	    getDriver().quit();
 	}
 	
 }

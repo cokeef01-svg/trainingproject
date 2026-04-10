@@ -55,8 +55,8 @@ public class LoginTest extends BaseTest {
         LoginPage login = new LoginPage(getDriver());
 
         // Use one valid known-good login and validate that it is successful
-        login.login("tomsmith", "SuperSecretPassword!")
-        .verifyLoginSuccessful();
+        login.login("tomsmith", "SuperSecretPassword!");
+        Assert.assertTrue(login.verifyLoginSuccessful(), "Login should succeed");
         
     }
 
@@ -83,9 +83,9 @@ public class LoginTest extends BaseTest {
         login.login(username, password);
 
         if (expected.equalsIgnoreCase("success")) {
-            login.verifyLoginSuccessful();
+            Assert.assertTrue(login.verifyLoginSuccessful(), "Expected login to succeed");
         } else {
-            login.verifyLoginFailed();
+            Assert.assertTrue(login.verifyLoginFailed(), "Expected login to fail");
         }
     }
 }

@@ -13,10 +13,10 @@ public class FirstTest extends BaseTest {
  
  
 		 // open Google
-		 driver.get("https://www.google.com/");
+		 getDriver().get("https://www.google.com/");
 		 
 		 // get the title
-		 String title = driver.getTitle();
+		 String title = getDriver().getTitle();
 		 
 		 // print the title
 		 System.out.println("Page Title is: " + title);
@@ -24,7 +24,7 @@ public class FirstTest extends BaseTest {
 		 // assert that title contains Google
 		 Assert.assertTrue(title.contains("Google"));
 
-	        driver.quit();
+		 getDriver().quit();
 	    }
 	
 
