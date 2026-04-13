@@ -117,8 +117,8 @@ public class BaseTest {
                  * inside Jenkins (especially when running as a Windows service).
                  */
                 EdgeOptions edgeOptions = new EdgeOptions();
-                edgeOptions.addArguments("--headless");
-                edgeOptions.addArguments("--disable-gpu");
+                //edgeOptions.addArguments("--headless");
+                //edgeOptions.addArguments("--disable-gpu");
                 edgeOptions.addArguments("--window-size=1920,1080");
 
                 localDriver = new EdgeDriver(edgeOptions);
