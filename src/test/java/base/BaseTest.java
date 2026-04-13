@@ -120,8 +120,6 @@ public class BaseTest {
                 edgeOptions.addArguments("--headless");
                 edgeOptions.addArguments("--disable-gpu");
                 edgeOptions.addArguments("--window-size=1920,1080");
-                edgeOptions.addArguments("--no-sandbox");
-                edgeOptions.addArguments("--disable-dev-shm-usage");
 
                 localDriver = new EdgeDriver(edgeOptions);
                 break;
