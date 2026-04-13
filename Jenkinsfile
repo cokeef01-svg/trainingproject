@@ -9,7 +9,7 @@ pipeline {
     parameters {
         choice(
             name: 'SUITE',
-            choices: ['smoke', 'regression'],
+            choices: ['smoke', 'regression', 'edge-smoke'],
             description: 'Choose which TestNG suite to run'
         )
     }

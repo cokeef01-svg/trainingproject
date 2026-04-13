@@ -7,6 +7,7 @@ import java.lang.reflect.Method;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.edge.EdgeDriver;
+import org.openqa.selenium.edge.EdgeOptions;
 
 // TestNG imports
 import org.testng.ITestResult;
@@ -108,7 +109,21 @@ public class BaseTest {
                         "webdriver.edge.driver",
                         "C:\\Conor\\eclipse\\EdgeDriver\\edgedriver_win64\\msedgedriver.exe"
                 );
-                localDriver = new EdgeDriver();
+
+                /**
+                 * EdgeOptions for Jenkins / CI
+                 * ----------------------------
+                 * These options help prevent browser crashes when running
+                 * inside Jenkins (especially when running as a Windows service).
+                 */
+                EdgeOptions edgeOptions = new EdgeOptions();
+                edgeOptions.addArguments("--headless=new");
+                edgeOptions.addArguments("--disable-gpu");
+                edgeOptions.addArguments("--window-size=1920,1080");
+                edgeOptions.addArguments("--no-sandbox");
+                edgeOptions.addArguments("--disable-dev-shm-usage");
+
+                localDriver = new EdgeDriver(edgeOptions);
                 break;
 
             default:
@@ -142,8 +157,10 @@ public class BaseTest {
     protected void openUrl(String url) {
         getDriver().get(url);
 
-        // Log navigation step in report
-        test.get().log(Status.INFO, "Opened URL: " + url);
+        // Log navigation step in report (only if test exists)
+        if (test.get() != null) {
+            test.get().log(Status.INFO, "Opened URL: " + url);
+        }
     }
 
     /**
@@ -157,40 +174,51 @@ public class BaseTest {
      * 3. Closes browser
      * 4. Removes ThreadLocal objects
      * 5. Writes report updates to file
+     *
+     * IMPORTANT:
+     * Added null checks to avoid failures when browser setup fails
+     * (e.g. Edge crash in Jenkins)
      */
     @AfterMethod(alwaysRun = true)
     public void tearDown(ITestResult result) {
 
-        // Test passed
-        if (result.getStatus() == ITestResult.SUCCESS) {
-            test.get().log(Status.PASS, "Test passed");
-        }
+        // Get current ExtentTest safely
+        ExtentTest currentTest = test.get();
 
-        // Test failed
-        else if (result.getStatus() == ITestResult.FAILURE) {
-            test.get().log(Status.FAIL, result.getThrowable());
+        // Only log if test object exists
+        if (currentTest != null) {
 
-            // Only take screenshot if driver exists
-            if (driver.get() != null) {
-                String screenshotPath = ScreenshotUtil.takeScreenshot(
-                        getDriver(),
-                        result.getName()
-                );
+            // Test passed
+            if (result.getStatus() == ITestResult.SUCCESS) {
+                currentTest.log(Status.PASS, "Test passed");
+            }
 
-                System.out.println("Screenshot saved at: " + screenshotPath);
+            // Test failed
+            else if (result.getStatus() == ITestResult.FAILURE) {
+                currentTest.log(Status.FAIL, result.getThrowable());
 
-                try {
-                    // Attach screenshot to Extent report
-                    test.get().addScreenCaptureFromPath(screenshotPath);
-                } catch (Exception e) {
-                    e.printStackTrace();
+                // Only take screenshot if driver exists
+                if (driver.get() != null) {
+                    String screenshotPath = ScreenshotUtil.takeScreenshot(
+                            getDriver(),
+                            result.getName()
+                    );
+
+                    System.out.println("Screenshot saved at: " + screenshotPath);
+
+                    try {
+                        // Attach screenshot to Extent report
+                        currentTest.addScreenCaptureFromPath(screenshotPath);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
                 }
             }
-        }
 
-        // Test skipped
-        else if (result.getStatus() == ITestResult.SKIP) {
-            test.get().log(Status.SKIP, "Test skipped");
+            // Test skipped
+            else if (result.getStatus() == ITestResult.SKIP) {
+                currentTest.log(Status.SKIP, "Test skipped");
+            }
         }
 
         // Quit browser and clean up ThreadLocal driver
