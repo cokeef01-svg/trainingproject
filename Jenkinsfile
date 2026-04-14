@@ -2,36 +2,24 @@ pipeline {
     agent any
 
     tools {
+        // Use the JDK and Maven tools configured in Jenkins
         jdk 'JDK'
         maven 'Maven'
     }
 
     parameters {
+        // Choose which TestNG suite file to run
         choice(
             name: 'SUITE',
-            choices: ['smoke', 'regression', 'edge-smoke'],
+            choices: ['smoke', 'regression', 'edge-smoke', 'cucumber'],
             description: 'Choose which TestNG suite to run'
         )
-    }
 
-    stages {
-        stage('Checkout') {
-            steps {
-                checkout scm
-            }
-        }
-
-        stage('Build & Test') {
-            steps {
-                bat "mvn clean test -Dsurefire.suiteXmlFiles=testng/${params.SUITE}.xml"
-            }
-        }
+        // Used only for Cucumber runs
+        // Examples: @smoke   @regression   @smoke and not @ignore
+        string(
+            name: 'TAGS',
+            defaultValue: '@smoke',
+            description: 'Cucumber tag expression'
+        )
     }
-
-    post {
-        always {
-            junit testResults: 'target/surefire-reports/*.xml', allowEmptyResults: true
-            archiveArtifacts artifacts: 'reports/*.html, screenshots/*.png', allowEmptyArchive: true
-        }
-    }
-}
