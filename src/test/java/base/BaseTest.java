@@ -149,9 +149,14 @@ public class BaseTest {
         WebDriver localDriver;
 
         switch (browser.toLowerCase()) {
-            case "chrome":
-                localDriver = new ChromeDriver();
-                break;
+        case "chrome":
+            System.setProperty(
+                "webdriver.chrome.driver",
+                "C:\\Conor\\Selenium\\chromedriver-win64\\chromedriver-win64\\chromedriver.exe"
+            );
+
+            localDriver = new ChromeDriver();
+            break;
 
             case "edge":
                 System.setProperty(
