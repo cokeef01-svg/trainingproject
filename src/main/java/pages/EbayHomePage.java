@@ -9,6 +9,7 @@ public class EbayHomePage extends BasePage {
 	
 	public EbayHomePage(WebDriver driver) {
 		super(driver);
+		this.driver = driver;
 	}
 	
 	// Locators
