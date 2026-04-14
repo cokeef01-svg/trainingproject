@@ -15,12 +15,18 @@ pipeline {
             description: 'Choose which TestNG suite to run'
         )
 
-        // Used only for Cucumber runs
-        // Examples: @smoke   @regression   @smoke and not @ignore
+        // Used for Cucumber tag filtering
         string(
             name: 'TAGS',
             defaultValue: '@smoke',
             description: 'Cucumber tag expression'
+        )
+
+        // Browser used by Cucumber Hooks
+        choice(
+            name: 'BROWSER',
+            choices: ['chrome', 'edge'],
+            description: 'Browser to use for Cucumber runs'
         )
     }
 
@@ -33,19 +39,20 @@ pipeline {
 
         stage('Build & Test') {
             steps {
-                // Run the selected suite
-                // TAGS is mainly used when SUITE = cucumber
-                bat "mvn clean test -Dsurefire.suiteXmlFiles=testng/${params.SUITE}.xml -Dcucumber.filter.tags=\"${params.TAGS}\""
+                // Run selected suite
+                // TAGS applies mainly to cucumber suite
+                // BROWSER is used by Cucumber Hooks through system property
+                bat "mvn clean test -Dsurefire.suiteXmlFiles=testng/${params.SUITE}.xml -Dcucumber.filter.tags=\"${params.TAGS}\" -Dbrowser=${params.BROWSER}"
             }
         }
     }
 
     post {
         always {
-            // Publish TestNG / Surefire results
+            // Publish Surefire / TestNG results
             junit testResults: 'target/surefire-reports/*.xml', allowEmptyResults: true
 
-            // Archive HTML reports and screenshots if they exist
+            // Archive reports and screenshots if they exist
             archiveArtifacts artifacts: 'reports/*.html, screenshots/*.png', allowEmptyArchive: true
         }
     }
