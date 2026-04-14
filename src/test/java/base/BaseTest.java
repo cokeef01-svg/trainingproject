@@ -73,7 +73,7 @@ public class BaseTest {
     /**
      * setUp()
      * -------
-     * Runs before every test method.
+     * Runs before every TestNG test method.
      *
      * What it does:
      * 1. Loads config
@@ -95,38 +95,8 @@ public class BaseTest {
         // Load config.properties values
         config = new ConfigReader();
 
-        // Local driver variable used to create browser instance
-        WebDriver localDriver;
-
-        // Launch browser based on parameter from testng.xml
-        switch (browser.toLowerCase()) {
-            case "chrome":
-                localDriver = new ChromeDriver();
-                break;
-
-            case "edge":
-                System.setProperty(
-                        "webdriver.edge.driver",
-                        "C:\\Conor\\eclipse\\EdgeDriver\\edgedriver_win64\\msedgedriver.exe"
-                );
-
-                /**
-                 * EdgeOptions for Jenkins / CI
-                 * ----------------------------
-                 * These options help prevent browser crashes when running
-                 * inside Jenkins (especially when running as a Windows service).
-                 */
-                EdgeOptions edgeOptions = new EdgeOptions();
-                edgeOptions.addArguments("--headless");
-                edgeOptions.addArguments("--disable-gpu");
-                edgeOptions.addArguments("--window-size=1920,1080");
-
-                localDriver = new EdgeDriver(edgeOptions);
-                break;
-
-            default:
-                throw new IllegalArgumentException("Browser not supported: " + browser);
-        }
+        // Create browser instance
+        WebDriver localDriver = createDriver(browser);
 
         // Maximize browser window
         localDriver.manage().window().maximize();
@@ -147,6 +117,64 @@ public class BaseTest {
     }
 
     /**
+     * launchBrowserForCucumber()
+     * --------------------------
+     * Helper method for Cucumber, where TestNG does not supply Method automatically.
+     */
+    public void launchBrowserForCucumber(String browser, String testName) {
+
+        // Load config.properties values
+        config = new ConfigReader();
+
+        // Create browser instance
+        WebDriver localDriver = createDriver(browser);
+
+        // Maximize browser window
+        localDriver.manage().window().maximize();
+
+        // Store driver in ThreadLocal
+        driver.set(localDriver);
+
+        // Create report entry for Cucumber scenario
+        ExtentTest extentTest = extent.createTest(testName + " [" + browser + "]");
+        test.set(extentTest);
+    }
+
+    /**
+     * createDriver()
+     * --------------
+     * Shared helper used by both TestNG and Cucumber setup.
+     */
+    private WebDriver createDriver(String browser) {
+        WebDriver localDriver;
+
+        switch (browser.toLowerCase()) {
+            case "chrome":
+                localDriver = new ChromeDriver();
+                break;
+
+            case "edge":
+                System.setProperty(
+                    "webdriver.edge.driver",
+                    "C:\\Conor\\eclipse\\EdgeDriver\\edgedriver_win64\\msedgedriver.exe"
+                );
+
+                EdgeOptions edgeOptions = new EdgeOptions();
+                edgeOptions.addArguments("--headless");
+                edgeOptions.addArguments("--disable-gpu");
+                edgeOptions.addArguments("--window-size=1920,1080");
+
+                localDriver = new EdgeDriver(edgeOptions);
+                break;
+
+            default:
+                throw new IllegalArgumentException("Browser not supported: " + browser);
+        }
+
+        return localDriver;
+    }
+
+    /**
      * openUrl()
      * ---------
      * Helper method used by tests to open a URL.
@@ -164,7 +192,7 @@ public class BaseTest {
     /**
      * tearDown()
      * ----------
-     * Runs after every test method.
+     * Runs after every TestNG test method.
      *
      * What it does:
      * 1. Marks test as PASS / FAIL / SKIP in report
@@ -198,8 +226,8 @@ public class BaseTest {
                 // Only take screenshot if driver exists
                 if (driver.get() != null) {
                     String screenshotPath = ScreenshotUtil.takeScreenshot(
-                            getDriver(),
-                            result.getName()
+                        getDriver(),
+                        result.getName()
                     );
 
                     System.out.println("Screenshot saved at: " + screenshotPath);
@@ -229,6 +257,21 @@ public class BaseTest {
         test.remove();
 
         // Write latest report updates to the HTML file
+        extent.flush();
+    }
+
+    /**
+     * quitBrowserForCucumber()
+     * ------------------------
+     * Helper method for Cucumber teardown.
+     */
+    public void quitBrowserForCucumber() {
+        if (driver.get() != null) {
+            getDriver().quit();
+            driver.remove();
+        }
+
+        test.remove();
         extent.flush();
     }
 }
