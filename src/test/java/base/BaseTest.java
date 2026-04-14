@@ -43,7 +43,7 @@ public class BaseTest {
      * Used to read values from config.properties
      * such as login URL, navigation URL, etc.
      */
-    protected ConfigReader config;
+    protected static ConfigReader config;
 
     /**
      * ExtentReports
