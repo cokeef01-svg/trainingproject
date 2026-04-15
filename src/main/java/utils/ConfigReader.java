@@ -40,4 +40,12 @@ public class ConfigReader {
     public int getTimeout() {
         return Integer.parseInt(prop.getProperty("timeout"));
     }
+    
+    public String getRunMode() {
+        return prop.getProperty("runMode");
+    }
+
+    public String getGridUrl() {
+        return prop.getProperty("gridUrl");
+    }
 }
