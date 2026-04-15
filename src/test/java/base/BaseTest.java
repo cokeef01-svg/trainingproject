@@ -165,7 +165,7 @@ public class BaseTest {
                 );
 
                 EdgeOptions edgeOptions = new EdgeOptions();
-                edgeOptions.addArguments("--headless");
+                edgeOptions.addArguments("--headless=new");
                 edgeOptions.addArguments("--disable-gpu");
                 edgeOptions.addArguments("--window-size=1920,1080");
                 edgeOptions.addArguments("--no-sandbox");
