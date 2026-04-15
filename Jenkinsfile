@@ -28,6 +28,13 @@ pipeline {
             choices: ['chrome', 'edge'],
             description: 'Browser to use for Cucumber runs'
         )
+        
+        // ✅ NEW: Run mode (local vs grid)
+    	choice(
+	        name: 'RUN_MODE',
+	        choices: ['local', 'grid'],
+	        description: 'Execution mode (local machine or Selenium Grid)'
+    )
     }
 
     stages {
@@ -42,7 +49,7 @@ pipeline {
                 // Run selected suite
                 // TAGS applies mainly to cucumber suite
                 // BROWSER is used by Cucumber Hooks through system property
-                bat "mvn clean test -Dsurefire.suiteXmlFiles=testng/${params.SUITE}.xml -Dcucumber.filter.tags=\"${params.TAGS}\" -Dbrowser=${params.BROWSER}"
+                bat "mvn clean test -Dsurefire.suiteXmlFiles=testng/${params.SUITE}.xml -Dcucumber.filter.tags=\"${params.TAGS}\" -Dbrowser=${params.BROWSER} -DrunMode=${params.RUN_MODE}"
             }
         }
     }

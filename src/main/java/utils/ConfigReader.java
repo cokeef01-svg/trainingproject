@@ -42,10 +42,10 @@ public class ConfigReader {
     }
     
     public String getRunMode() {
-        return prop.getProperty("runMode");
+    	return System.getProperty("runMode", prop.getProperty("runMode"));
     }
 
     public String getGridUrl() {
-        return prop.getProperty("gridUrl");
+    	return System.getProperty("gridUrl", prop.getProperty("gridUrl"));
     }
 }
