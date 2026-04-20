@@ -144,32 +144,49 @@ public class BaseTest {
      * createDriver()
      * --------------
      * Shared helper used by both TestNG and Cucumber setup.
+     *
+     * IMPORTANT:
+     * We no longer use hardcoded driver paths here.
+     * Selenium Manager handles driver resolution automatically
+     * for supported browser/driver combinations.
      */
     private WebDriver createDriver(String browser) {
         WebDriver localDriver;
 
         switch (browser.toLowerCase()) {
-        case "chrome":
-            System.setProperty(
-                "webdriver.chrome.driver",
-                "C:\\Conor\\Selenium\\chromedriver-win64\\chromedriver-win64\\chromedriver.exe"
-            );
 
-            localDriver = new ChromeDriver();
-            break;
+            case "chrome":
+                /**
+                 * No System.setProperty needed.
+                 * Selenium Manager will locate/download the correct driver.
+                 */
+                localDriver = new ChromeDriver();
+                break;
 
             case "edge":
-                System.setProperty(
-                    "webdriver.edge.driver",
-                    "C:\\Conor\\eclipse\\EdgeDriver\\edgedriver_win64\\msedgedriver.exe"
-                );
+                /**
+                 * For Edge, Selenium Manager download is currently failing on this machine.
+                 * So we read the driver path from config.properties instead of hardcoding it in Java.
+                 */
+                System.setProperty("webdriver.edge.driver", config.getEdgeDriverPath());
 
                 EdgeOptions edgeOptions = new EdgeOptions();
-                edgeOptions.addArguments("--headless=new");
-                edgeOptions.addArguments("--disable-gpu");
-                edgeOptions.addArguments("--window-size=1920,1080");
-                edgeOptions.addArguments("--no-sandbox");
-                edgeOptions.addArguments("--disable-dev-shm-usage");
+
+                /**
+                 * Headless execution control
+                 * --------------------------
+                 * Runs headless only if enabled in config.properties
+                 * This allows:
+                 * - visible browser locally (for debugging)
+                 * - headless execution in Jenkins / Grid
+                 */
+                if (config.isHeadless()) {
+                    edgeOptions.addArguments("--headless=new");
+                    edgeOptions.addArguments("--disable-gpu");
+                    edgeOptions.addArguments("--window-size=1920,1080");
+                    edgeOptions.addArguments("--no-sandbox");
+                    edgeOptions.addArguments("--disable-dev-shm-usage");
+                }
 
                 localDriver = new EdgeDriver(edgeOptions);
                 break;

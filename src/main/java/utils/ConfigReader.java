@@ -48,4 +48,12 @@ public class ConfigReader {
     public String getGridUrl() {
     	return System.getProperty("gridUrl", prop.getProperty("gridUrl"));
     }
+    
+    public String getEdgeDriverPath() {
+        return prop.getProperty("edgeDriverPath");
+    }
+    
+    public boolean isHeadless() {
+        return Boolean.parseBoolean(prop.getProperty("headless"));
+    }
 }
