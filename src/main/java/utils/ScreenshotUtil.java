@@ -4,13 +4,20 @@ import org.openqa.selenium.OutputType;
 import org.openqa.selenium.TakesScreenshot;
 import org.openqa.selenium.WebDriver;
 
-import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
-import java.nio.file.StandardCopyOption;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
+/**
+ * ScreenshotUtil
+ * --------------
+ * Utility class to capture screenshots during test execution.
+ *
+ * Updated to use OutputType.BYTES + Java NIO (modern approach).
+ */
 public class ScreenshotUtil {
 
     public static String takeScreenshot(WebDriver driver, String testName) {
@@ -19,23 +26,31 @@ public class ScreenshotUtil {
         String timestamp = LocalDateTime.now()
                 .format(DateTimeFormatter.ofPattern("yyyyMMdd_HHmmss_SSS"));
 
-        // Add thread id as extra protection during parallel runs
+        // Add thread id for parallel execution safety
         long threadId = Thread.currentThread().getId();
 
-        String filePath = "screenshots/" + testName + "_" + timestamp + "_T" + threadId + ".png";
+        String fileName = testName + "_" + timestamp + "_T" + threadId + ".png";
 
-        File src = ((TakesScreenshot) driver).getScreenshotAs(OutputType.FILE);
+        // Define screenshots directory
+        String screenshotDir = System.getProperty("user.dir") + "/screenshots/";
+        Path directoryPath = Paths.get(screenshotDir);
+        Path filePath = Paths.get(screenshotDir + fileName);
 
         try {
-            Files.createDirectories(new File("screenshots").toPath());
+            // Create directory if it does not exist
+            Files.createDirectories(directoryPath);
 
-            // REPLACE_EXISTING avoids copy errors if a duplicate somehow still occurs
-            Files.copy(src.toPath(), new File(filePath).toPath(), StandardCopyOption.REPLACE_EXISTING);
+            // Take screenshot as bytes (modern approach)
+            byte[] screenshotBytes =
+                    ((TakesScreenshot) driver).getScreenshotAs(OutputType.BYTES);
+
+            // Write file using NIO
+            Files.write(filePath, screenshotBytes);
 
         } catch (IOException e) {
-            e.printStackTrace();
+            System.out.println("Screenshot capture failed: " + e.getMessage());
         }
 
-        return filePath;
+        return filePath.toString();
     }
 }
