@@ -4,7 +4,7 @@ Selenium Java automation framework built to demonstrate modern test automation p
 
 ---
 
-## 🚀 Tech Stack
+## Tech Stack
 
 * Java (JDK 21)
 * Selenium WebDriver
@@ -17,7 +17,7 @@ Selenium Java automation framework built to demonstrate modern test automation p
 
 ---
 
-## 📁 Project Structure
+## Project Structure
 
 trainingproject/
 │
@@ -47,7 +47,7 @@ trainingproject/
 
 ---
 
-## ▶️ Running Tests
+## Running Tests
 
 ### Run Smoke Suite
 
@@ -75,7 +75,7 @@ mvn clean test "-Dsurefire.suiteXmlFiles=testng/smoke.xml"
 
 ---
 
-## 🌐 Cross-Browser Execution
+## Cross-Browser Execution
 
 Browser is controlled via TestNG:
 
@@ -90,7 +90,7 @@ Supported browsers:
 
 ---
 
-## ⚙️ Configuration
+## Configuration
 
 All runtime configuration is controlled via:
 
@@ -115,7 +115,7 @@ timeout=10
 
 ---
 
-## ☁️ Selenium Grid
+## Selenium Grid
 
 Framework supports execution on Selenium Grid.
 
@@ -133,7 +133,7 @@ runMode=local
 
 ---
 
-## 🥒 Cucumber (BDD) Integration
+## Cucumber (BDD) Integration
 
 The framework supports Behaviour-Driven Development (BDD) using Cucumber.
 
@@ -162,7 +162,7 @@ Cucumber scenarios are executed via TestNG runner classes and can be included in
 
 ---
 
-## 🧪 Test Coverage
+## Test Coverage
 
 Current test scenarios include:
 
@@ -173,7 +173,7 @@ Current test scenarios include:
 
 ---
 
-## 🎯 Framework Features
+## Framework Features
 
 * Page Object Model (clean separation of UI logic)
 * Thread-safe WebDriver using ThreadLocal
@@ -187,7 +187,7 @@ Current test scenarios include:
 
 ---
 
-## 🔁 Jenkins Integration
+## Jenkins Integration
 
 * Pipeline defined in `Jenkinsfile`
 * Parameterised suite selection (smoke / regression)
@@ -205,7 +205,7 @@ mvn clean test -Dsurefire.suiteXmlFiles=testng/${SUITE}.xml
 
 ---
 
-## 🛠️ Improvements Implemented
+## Improvements Implemented
 
 * Removed hardcoded WebDriver paths
 * Externalised configuration
@@ -217,16 +217,16 @@ mvn clean test -Dsurefire.suiteXmlFiles=testng/${SUITE}.xml
 
 ---
 
-## 📌 Future Enhancements
+## Future Enhancements
 
 * Retry mechanism for flaky tests
 * Enhanced reporting (custom dashboards)
 * Docker-based Selenium Grid
 * Parallel execution optimisation
 
----
-
-## 👤 Author
+--- 
+https://github.com/cokeef01-svg/trainingproject.git
+## Author
 
 Conor O’Keeffe
 Senior Test Engineer
