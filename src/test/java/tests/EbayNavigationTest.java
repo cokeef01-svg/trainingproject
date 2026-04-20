@@ -17,12 +17,12 @@ public class EbayNavigationTest extends BaseTest {
         EbayHomePage home = new EbayHomePage(getDriver());
 
         // Search for an item
-        home.searchForItem("laptop");
+        home.searchForItem("labtop");
 
         // Validate that search results page title contains the keyword
         Assert.assertTrue(
-                home.isSearchResultDisplayed("laptop"),
-                "Search results page title does not contain 'laptop'"
+                home.isSearchResultDisplayed("labtop"),
+                "Search results page title does not contain 'labtop'"
         );
 
         // Navigate back to homepage
